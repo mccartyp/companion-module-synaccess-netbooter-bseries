@@ -1,0 +1,43 @@
+{
+  "id": "synaccess-netbooter-bseries",
+  "name": "Synaccess netBooter B Series",
+  "shortname": "netBooter B",
+  "manufacturer": "Synaccess Networks",
+  "products": [
+    "NP-02B",
+    "NP-02BH",
+    "NP-05B",
+    "NP-05BH"
+  ],
+  "keywords": [
+    "synaccess",
+    "netbooter",
+    "pdu",
+    "power",
+    "outlet",
+    "reboot",
+    "cmd.cgi",
+    "basic-auth",
+    "np-02b",
+    "np-05b",
+    "b-series"
+  ],
+  "description": "Control Synaccess netBooter B Series PDUs (NP-02B/NP-05B) via HTTP GET cmd.cgi (Basic Auth)",
+  "version": "0.1.0",
+  "license": "MIT",
+  "repository": "git+https://github.com/mccartyp/companion-module-synaccess-netbooter-bseries.git",
+  "bugs": "https://github.com/mccartyp/companion-module-synaccess-netbooter-bseries/issues",
+  "maintainers": [
+    {
+      "name": "Patrick McCarty",
+      "email": "mccartyp@gmail.com"
+    }
+  ],
+  "runtime": {
+    "type": "node18",
+    "api": "nodejs-ipc",
+    "apiVersion": "1.11.3",
+    "entrypoint": "../main.js"
+  },
+  "legacyIds": []
+}

@@ -1,0 +1,16 @@
+name: Companion Module Checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    name: Check module
+
+    if: ${{ !contains(github.repository, 'companion-module-template-') }}
+
+    permissions:
+      packages: read
+
+    uses: bitfocus/actions/.github/workflows/module-checks.yaml@main

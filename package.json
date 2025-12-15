@@ -1,0 +1,26 @@
+{
+  "name": "companion-module-synaccess-netbooter-bseries",
+  "version": "0.1.0",
+  "description": "Bitfocus Companion module for Synaccess netBooter B Series PDUs (NP-02B/NP-05B) via HTTP GET cmd.cgi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mccartyp/companion-module-synaccess-netbooter-bseries.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mccartyp/companion-module-synaccess-netbooter-bseries/issues"
+  },
+  "author": "Patrick McCarty <mccartyp@gmail.com>",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"No tests configured\"",
+    "lint": "echo \"No lint configured\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@companion-module/base": "^1.11.3"
+  }
+}
