@@ -1,5 +1,5 @@
 // config.js
-import { staticText, textInput, numberInput, checkbox } from './fields.js'
+import { staticText, textInput, numberInput } from './fields.js'
 
 export const configFields = [
 	staticText({
@@ -42,11 +42,33 @@ export const configFields = [
 	}),
 
 	numberInput({
-		id: 'timeoutMs',
-		label: 'HTTP Timeout (ms)',
-		width: 6,
+		id: 'statusTimeoutMs',
+		label: 'Status Timeout (ms) ($A5)',
+		width: 3,
 		defaultValue: 3000,
 		min: 250,
 		max: 30000,
+		step: 250,
 	}),
+
+	numberInput({
+		id: 'controlTimeoutMs',
+		label: 'Control Timeout (ms) ($A3/$A7)',
+		width: 3,
+		defaultValue: 20000,
+		min: 500,
+		max: 60000,
+		step: 500,
+	}),
+
+	numberInput({
+		id: 'rebootTimeoutMs',
+		label: 'Reboot Timeout (ms) (OFF/ON legs)',
+		width: 3,
+		defaultValue: 30000,
+		min: 1000,
+		max: 120000,
+		step: 500,
+	}),
+
 ]

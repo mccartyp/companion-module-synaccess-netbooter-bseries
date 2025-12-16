@@ -1,12 +1,22 @@
+// upgrade.js
+
 export const upgradeScripts = [
-	function upgradeTo_v0_1_0(context, props) {
-		const upgraded = { ...props }
+	function upgradeTo_v0_1_0(_context, props) {
+		const result = {
+			updatedConfig: null,
+			updatedActions: [],
+			updatedFeedbacks: [],
+		}
 
-		if (upgraded.pollIntervalMs === undefined) upgraded.pollIntervalMs = 2000
-		if (upgraded.timeoutMs === undefined) upgraded.timeoutMs = 3000
-		if (upgraded.username === undefined) upgraded.username = 'admin'
-		if (upgraded.password === undefined) upgraded.password = 'admin'
+		// props.config is where instance config lives
+		const cfg = { ...(props.config || {}) }
 
-		return upgraded
+		if (cfg.pollIntervalMs === undefined) cfg.pollIntervalMs = 2000
+		if (cfg.statusTimeoutMs === undefined) cfg.statusTimeoutMs = 3000
+		if (cfg.username === undefined) cfg.username = 'admin'
+		if (cfg.password === undefined) cfg.password = 'admin'
+
+		result.updatedConfig = cfg
+		return result
 	},
 ]

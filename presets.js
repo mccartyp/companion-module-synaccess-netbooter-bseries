@@ -10,7 +10,7 @@ function portCountFromInstance(instance) {
 export function getPresets(instance) {
 	const ports = portCountFromInstance(instance)
 
-	const groups = [
+	const presetGroups = [
 		{ name: 'Global Power' },
 		{ name: 'On' },
 		{ name: 'Off' },
@@ -20,9 +20,9 @@ export function getPresets(instance) {
 
 	const presets = {}
 
-	/* -------------------------
-	 * Global Power
-	 * ------------------------- */
+	// ---------------------------------------------------------------------
+	// Global Power
+	// ---------------------------------------------------------------------
 	presets.all_on = {
 		type: 'button',
 		category: 'Global Power',
@@ -62,9 +62,9 @@ export function getPresets(instance) {
 		steps: [{ down: [{ actionId: 'refresh_status', options: {} }], up: [] }],
 	}
 
-	/* -------------------------
-	 * Per-Outlet Presets
-	 * ------------------------- */
+	// ---------------------------------------------------------------------
+	// Per-outlet presets
+	// ---------------------------------------------------------------------
 	for (let outlet = 1; outlet <= ports; outlet++) {
 		// ON
 		presets[`on_${outlet}`] = {
@@ -79,22 +79,10 @@ export function getPresets(instance) {
 			},
 			steps: [{ down: [{ actionId: 'set_outlet', options: { outlet, state: 1 } }], up: [] }],
 			feedbacks: [
-				{
-					// ON -> green
-					feedbackId: 'outlet_on',
-					options: { outlet },
-					style: {
-						bgcolor: combineRgb(0, 140, 0),
-					},
-				},
-				{
-					// OFF -> red
-					feedbackId: 'outlet_off',
-					options: { outlet },
-					style: {
-						bgcolor: combineRgb(140, 0, 0),
-					},
-				},
+				// ON -> green highlight
+				{ feedbackId: 'outlet_on', options: { outlet }, style: { bgcolor: combineRgb(0, 140, 0) } },
+				// OFF -> red highlight
+				{ feedbackId: 'outlet_off', options: { outlet }, style: { bgcolor: combineRgb(140, 0, 0) } },
 			],
 		}
 
@@ -111,26 +99,14 @@ export function getPresets(instance) {
 			},
 			steps: [{ down: [{ actionId: 'set_outlet', options: { outlet, state: 0 } }], up: [] }],
 			feedbacks: [
-				{
-					// OFF -> red
-					feedbackId: 'outlet_off',
-					options: { outlet },
-					style: {
-						bgcolor: combineRgb(140, 0, 0),
-					},
-				},
-				{
-					// ON -> green
-					feedbackId: 'outlet_on',
-					options: { outlet },
-					style: {
-						bgcolor: combineRgb(0, 140, 0),
-					},
-				},
+				// OFF -> red highlight
+				{ feedbackId: 'outlet_off', options: { outlet }, style: { bgcolor: combineRgb(140, 0, 0) } },
+				// ON -> green highlight
+				{ feedbackId: 'outlet_on', options: { outlet }, style: { bgcolor: combineRgb(0, 140, 0) } },
 			],
 		}
 
-		// TOGGLE (unchanged)
+		// TOGGLE
 		presets[`toggle_${outlet}`] = {
 			type: 'button',
 			category: 'Toggle',
@@ -139,28 +115,16 @@ export function getPresets(instance) {
 				text: `P${outlet}\nTOGGLE`,
 				size: '14',
 				color: combineRgb(255, 255, 255),
-				bgcolor: combineRgb(40, 40, 40),
+				bgcolor: combineRgb(70, 70, 70),
 			},
 			steps: [{ down: [{ actionId: 'toggle_outlet', options: { outlet } }], up: [] }],
 			feedbacks: [
-				{
-					feedbackId: 'outlet_on',
-					options: { outlet },
-					style: {
-						bgcolor: combineRgb(0, 140, 0),
-					},
-				},
-				{
-					feedbackId: 'outlet_off',
-					options: { outlet },
-					style: {
-						bgcolor: combineRgb(140, 0, 0),
-					},
-				},
+				// Show OFF as red (requested); ON remains default background
+				{ feedbackId: 'outlet_off', options: { outlet }, style: { bgcolor: combineRgb(140, 0, 0) } },
 			],
 		}
 
-		// REBOOT
+		// REBOOT (passes delayMs option to the action)
 		presets[`reboot_${outlet}`] = {
 			type: 'button',
 			category: 'Reboot',
@@ -171,22 +135,9 @@ export function getPresets(instance) {
 				color: combineRgb(255, 255, 255),
 				bgcolor: combineRgb(110, 60, 0),
 			},
-			steps: [
-				{
-					down: [
-						{
-							actionId: 'reboot_outlet',
-							options: {
-								outlet,
-								delayMs: 5000, // sets the option value (OFF->delay->ON inside handler)
-							},
-						},
-					],
-					up: [],
-				},
-			]
+			steps: [{ down: [{ actionId: 'reboot_outlet', options: { outlet, delayMs: 5000 } }], up: [] }],
 		}
 	}
 
-	return { groups, presets }
+	return { presets, presetGroups }
 }
