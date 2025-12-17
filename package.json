@@ -1,6 +1,6 @@
 {
   "name": "companion-module-synaccess-netbooter-bseries",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Bitfocus Companion module for Synaccess netBooter B Series PDUs (NP-02B/NP-05B) via HTTP GET cmd.cgi",
   "license": "MIT",
   "repository": {
