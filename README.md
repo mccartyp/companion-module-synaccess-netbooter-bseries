@@ -52,6 +52,18 @@ Once connected, outlet actions and feedbacks will reflect the current device sta
 
 ---
 
+## Configuration Options
+
+- **Host / IP** – Address of the B Series device (required)
+- **Username / Password** – HTTP Basic Auth credentials (default: `admin` / `admin`)
+- **Status Poll Interval (ms)** – How often `$A5` status is requested (default: `2000`)
+- **Status Timeout (ms)** – Timeout for `$A5` polls (default: `3000`)
+- **Control Timeout (ms)** – Timeout for `$A3/$A7` commands (default: `20000`)
+- **Reboot Timeout (ms)** – Timeout for each OFF/ON leg of reboot (default: `30000`)
+- **Control Pacing (ms)** – Optional delay inserted between back-to-back control calls (default: `0`)
+
+---
+
 ## Actions
 
 | Action | Description |

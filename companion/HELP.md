@@ -12,9 +12,11 @@ The module auto-detects **2 vs 5 outlets** using the `$A5` status response.
 ## Configuration
 - **Host / IP**: Device address (e.g. `192.168.1.100`)
 - **Username / Password**: HTTP Basic Auth credentials
-- **Poll Interval**: How often the module requests `$A5` to update state
-- **Timeout**: HTTP request timeout (ms)
-- **Proxy**: Optional proxy support
+- **Poll Interval**: How often the module requests `$A5` to update state (ms)
+- **Status Timeout**: Timeout for `$A5` polls (ms)
+- **Control Timeout**: Timeout for `$A3/$A7` outlet commands (ms)
+- **Reboot Timeout**: Timeout applied to each OFF/ON leg of reboot (ms)
+- **Control Pacing**: Delay inserted between back-to-back control calls (ms)
 
 ## Notes on protocol encoding
 Commands are sent to `/cmd.cgi` using the `$A*` syntax.  
@@ -36,8 +38,8 @@ Example:
 
 ## Variables
 - `port_count` (2 or 5)
-- `outlet_1` … `outlet_n` (1/0)
-- `outlets_bits` (in outlet order)
+- `outlet_1` … `outlet_n` (boolean, true when ON)
+- `outlets_bits` (string of bits in outlet order)
 - `current_amps` (if provided by device)
 - `temp_c` (if provided by device)
 - `last_error` (empty when OK)
