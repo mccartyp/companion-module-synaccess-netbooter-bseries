@@ -16,7 +16,8 @@ import { assertValidOutlet, assertActionOk } from './utils.js'
 export function getActionDefinitions(instance) {
 	return {
 		set_outlet: {
-			name: 'Set Outlet',
+			name: 'Set Outlet Power',
+			description: 'Explicitly set a single outlet ON or OFF',
 			options: [
 				{ type: 'dropdown', id: 'outlet', label: 'Outlet', default: 1, choices: outletChoices(instance.portCount) },
 				{ type: 'dropdown', id: 'state', label: 'State', default: 1, choices: onOffChoices },
@@ -41,7 +42,8 @@ export function getActionDefinitions(instance) {
 		},
 
 		toggle_outlet: {
-			name: 'Toggle Outlet',
+			name: 'Toggle Outlet Power',
+			description: 'Toggle a single outlet based on its current state',
 			options: [{ type: 'dropdown', id: 'outlet', label: 'Outlet', default: 1, choices: outletChoices(instance.portCount) }],
 			callback: async (action) => {
 				const outlet = Number(action.options.outlet)
@@ -65,7 +67,8 @@ export function getActionDefinitions(instance) {
 		},
 
 		reboot_outlet: {
-			name: 'Reboot Outlet',
+			name: 'Reboot Outlet with Delay',
+			description: 'Power-cycle a single outlet with a programmable OFF/ON delay',
 			options: [
 				{ type: 'dropdown', id: 'outlet', label: 'Outlet', default: 1, choices: outletChoices(instance.portCount) },
 				{ type: 'number', id: 'delayMs', label: 'Reboot delay (ms)', default: 5000, min: 500, max: 60000, step: 500 },
@@ -133,7 +136,8 @@ export function getActionDefinitions(instance) {
 		},
 
 		set_all: {
-			name: 'Set All Outlets ON/OFF',
+			name: 'Set All Outlets On/Off',
+			description: 'Send a single command to set every outlet ON or OFF at once',
 			options: [{ type: 'dropdown', id: 'state', label: 'State', default: 1, choices: onOffChoices }],
 			callback: async (action) => {
 				const state = Number(action.options.state)
@@ -154,7 +158,8 @@ export function getActionDefinitions(instance) {
 		},
 
 		refresh_status: {
-			name: 'Refresh Status Now',
+			name: 'Refresh Device Status',
+			description: 'Immediately poll the device status outside the normal interval',
 			options: [],
 			callback: async () => {
 				instance.log('info', 'Action: manual status refresh requested')
