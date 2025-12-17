@@ -83,15 +83,11 @@ export function initFeedbacks(instance) {
 				// Brightness pulse: alternate between bright and dim red
 				if (instance._blinkPhase) {
 					return {
-						text: `P${outlet}\\nREBOOT`,
-						size: '14',
 						bgcolor: combineRgb(200, 0, 0), // Bright red
 						color: combineRgb(255, 255, 255),
 					}
 				} else {
 					return {
-						text: `P${outlet}\\nREBOOT`,
-						size: '14',
 						bgcolor: combineRgb(80, 0, 0), // Dark red
 						color: combineRgb(180, 180, 180),
 					}
