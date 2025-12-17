@@ -78,7 +78,7 @@ Once connected, outlet actions and feedbacks will reflect the current device sta
 | Variable | Description |
 |---------|------------|
 | `port_count` | Number of detected outlets (2 or 5) |
-| `outlet_1` … `outlet_n` | Outlet state (`1` = ON, `0` = OFF) |
+| `outlet_1` … `outlet_n` | Outlet state (`true` = ON, `false` = OFF) |
 | `outlets_bits` | Outlet states as a bit string in outlet order |
 | `current_amps` | Current draw (amps), if provided by device |
 | `temp_c` | Temperature (°C), if provided by device |
@@ -92,6 +92,8 @@ Once connected, outlet actions and feedbacks will reflect the current device sta
 - Commands use the `$A*` syntax defined by Synaccess
 - Commands are sent with **spaces converted to `+`**
   (no percent-encoding, to maintain compatibility with embedded firmware)
+- Uses a **single keep-alive HTTP agent** to minimize socket churn on the embedded
+  target while still serializing commands for stability.
 
 ### Example Request
 
@@ -130,6 +132,24 @@ This module normalizes the returned data so:
 
 - `outlet_1` always maps to physical outlet 1
 - Outlet numbering in Companion matches the device labeling
+
+---
+
+## Companion Best Practices
+
+This module follows Bitfocus development best practices:
+
+- **Connection management** – Validates configuration before starting polls, and
+  resets the HTTP agent after network/socket failures to recover from link drops.
+- **Efficient communication** – Serializes commands through a keep-alive agent
+  to avoid overloading the embedded stack.
+- **Robust error handling** – Normalizes common connection errors (timeouts,
+  host not found, refused connections) into clear Companion status messages.
+- **Batch variable updates** – Pushes all variables in a single update to keep
+  feedbacks and bindings in sync without unnecessary churn.
+- **User experience** – Includes connection/telemetry presets (connection status,
+  outlet bits, power/temp) in addition to per-outlet power controls for quick
+  dashboarding.
 
 ---
 

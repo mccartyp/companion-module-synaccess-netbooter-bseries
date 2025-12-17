@@ -28,6 +28,23 @@ export class SynaccessHttpClient {
 		this.resetAgent()
 	}
 
+	_normalizeError(err, host, cmdStr) {
+		const code = err?.code
+		if (code === 'ENOTFOUND') return `Host not found (${host})`
+		if (code === 'ECONNREFUSED') return `Connection refused by ${host}`
+		if (code === 'ETIMEDOUT' || code === 'ESOCKETTIMEDOUT') return `Timed out reaching ${host} for ${cmdStr}`
+		if (code === 'ECONNRESET') return `Connection reset while sending ${cmdStr} to ${host}`
+		if (code === 'EHOSTUNREACH') return `Host unreachable (${host})`
+
+		const msg = err?.message || String(err)
+		return `${msg}${cmdStr ? ` (cmd=${cmdStr})` : ''}`
+	}
+
+	_shouldResetAgent(err) {
+		const code = err?.code
+		return code === 'ECONNRESET' || code === 'ECONNREFUSED' || code === 'EPIPE'
+	}
+
 	/**
 	 * Number of in-flight HTTP calls (for pacing/polling coordination).
 	 */
@@ -120,6 +137,7 @@ export class SynaccessHttpClient {
 						res.setEncoding('utf8')
 
 						res.on('data', (c) => (data += c))
+						res.on('error', reject)
 						res.on('end', () => {
 							const body = String(data || '').trim()
 							if (res.statusCode < 200 || res.statusCode >= 300) {
@@ -140,8 +158,16 @@ export class SynaccessHttpClient {
 				})
 				return body
 			} catch (err) {
-				this.instance.log('error', `HTTP GET failed for ${path}: ${err?.message || err}`)
-				throw err
+				const friendly = this._normalizeError(err, host, cmdStr)
+				if (this._shouldResetAgent(err)) {
+					this.instance.log('debug', `Resetting HTTP agent after network error (${err?.code || 'unknown'})`)
+					this.resetAgent()
+				}
+				this.instance.log('error', `HTTP GET failed for ${path}: ${friendly}`)
+
+				const error = err instanceof Error ? err : new Error(String(err))
+				error.message = friendly
+				throw error
 			} finally {
 				this._pending--
 			}

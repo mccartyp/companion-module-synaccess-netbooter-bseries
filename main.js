@@ -58,6 +58,7 @@ export class SynaccessNetBooterBSeriesInstance extends InstanceBase {
 		this._rebootLocks = new Set()
 		this._rebootInProgress = 0
 		this._hasLoggedPollSuccess = false
+		this._configErrorLogged = false
 
 		// HTTP client (serialized, keep-alive)
 		this.http = new SynaccessHttpClient(this)
@@ -120,6 +121,7 @@ export class SynaccessNetBooterBSeriesInstance extends InstanceBase {
 		this.stopPolling()
 
 		this.http.resetAgent()
+		this._hasLoggedPollSuccess = false
 
 		this.initActions()
 		this.initPresets()
@@ -149,6 +151,23 @@ export class SynaccessNetBooterBSeriesInstance extends InstanceBase {
 		this.setPresetDefinitions(presets, presetGroups)
 	}
 
+	_hasValidConfig() {
+		const host = String(this.config?.host || '').trim()
+		if (!host) {
+			const msg = 'Device host/IP is required in the configuration'
+			if (!this._configErrorLogged) {
+				this.log('warn', msg)
+				this._configErrorLogged = true
+			}
+			setLastError(this, msg)
+			this.updateStatus(InstanceStatus.BadConfig, msg)
+			return false
+		}
+
+		this._configErrorLogged = false
+		return true
+	}
+
 	/* --------------------------------------------------------------------- */
 	/* Polling                                                               */
 	/* --------------------------------------------------------------------- */
@@ -159,6 +178,7 @@ export class SynaccessNetBooterBSeriesInstance extends InstanceBase {
 	startPolling() {
 		const intervalMs = Number(this.config.pollIntervalMs) || 2000
 		if (intervalMs <= 0) return
+		if (!this._hasValidConfig()) return
 
 		// Defensive: avoid multiple timers if startPolling() gets called twice
 		this.stopPolling()
@@ -231,6 +251,11 @@ export class SynaccessNetBooterBSeriesInstance extends InstanceBase {
 	 * Poll device status and update Companion state.
 	 */
 	async refreshStatus() {
+		if (!this._hasValidConfig()) {
+			this._isPolling = false
+			return
+		}
+
 		if (this._isPolling) return
 		this._isPolling = true
 

@@ -41,7 +41,7 @@ export function initVariables(instance) {
 	]
 
 	for (let i = 1; i <= instance.portCount; i++) {
-		variables.push({ variableId: `outlet_${i}`, name: `Outlet ${i} state (1=ON,0=OFF)` })
+		variables.push({ variableId: `outlet_${i}`, name: `Outlet ${i} state (boolean, true=ON)` })
 	}
 
 	instance.setVariableDefinitions(variables)
@@ -61,17 +61,20 @@ export function initVariables(instance) {
 export function updateVariablesFromState(instance) {
 	const vars = {}
 
-	vars['port_count'] = String(instance.portCount)
-	vars['outlets_bits'] = (instance.outletState || []).map((v) => (v ? '1' : '0')).join('')
-	vars['last_error'] = String(instance.lastError || '')
-
+	const outletBits = []
 	for (let i = 1; i <= instance.portCount; i++) {
-		vars[`outlet_${i}`] = instance.outletState?.[i - 1] ? '1' : '0'
+		const isOn = !!instance.outletState?.[i - 1]
+		outletBits.push(isOn ? '1' : '0')
+		vars[`outlet_${i}`] = isOn
 	}
 
+	vars['port_count'] = instance.portCount ? String(instance.portCount) : ''
+	vars['outlets_bits'] = outletBits.join('')
+	vars['last_error'] = String(instance.lastError || '')
+
 	// Optional DU-series fields (best effort)
-	if (instance.currentAmps !== undefined) vars['current_amps'] = String(instance.currentAmps)
-	if (instance.tempC !== undefined) vars['temp_c'] = String(instance.tempC)
+	vars['current_amps'] = instance.currentAmps !== undefined ? String(instance.currentAmps) : ''
+	vars['temp_c'] = instance.tempC !== undefined ? String(instance.tempC) : ''
 
 	instance.setVariableValues(vars)
 }
