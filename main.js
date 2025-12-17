@@ -8,7 +8,7 @@
  * - actions.js: Companion actions for outlet control and refresh.
  * - choices.js: Shared dropdown choice builders for outlets and on/off.
  * - config.js: Configuration field definitions.
- * - feedbacks.js: Visual feedback definitions driven by device status.
+ * - feedbacks.js: Visual feedback definitions driven by device status and reboot progress.
  * - fields.js: Field helper factories for configuration inputs.
  * - http.js: Serialized HTTP client for device commands.
  * - presets.js: Button presets grouped by outlet behavior.
@@ -57,6 +57,7 @@ export class SynaccessNetBooterBSeriesInstance extends InstanceBase {
 		// Per-outlet reboot locks (NOT global)
 		this._rebootLocks = new Set()
 		this._rebootInProgress = 0
+		this._rebootingOutlets = new Set()
 		this._hasLoggedPollSuccess = false
 		this._configErrorLogged = false
 
@@ -227,11 +228,26 @@ export class SynaccessNetBooterBSeriesInstance extends InstanceBase {
 	_lockReboot(outlet) {
 		if (this._rebootLocks.has(outlet)) return false
 		this._rebootLocks.add(outlet)
+		this._setOutletRebooting(outlet, true)
 		return true
 	}
 
 	_unlockReboot(outlet) {
 		this._rebootLocks.delete(outlet)
+		this._setOutletRebooting(outlet, false)
+	}
+
+	_isOutletRebooting(outlet) {
+		return this._rebootingOutlets.has(outlet)
+	}
+
+	_setOutletRebooting(outlet, rebooting) {
+		if (rebooting) this._rebootingOutlets.add(outlet)
+		else this._rebootingOutlets.delete(outlet)
+
+		if (typeof this.checkFeedbacks === 'function') {
+			this.checkFeedbacks('outlet_rebooting')
+		}
 	}
 
 	/* --------------------------------------------------------------------- */
@@ -322,6 +338,9 @@ runEntrypoint(SynaccessNetBooterBSeriesInstance, upgradeScripts)
  *   _hasLoggedPollSuccess: boolean,
  *   _lockReboot: (outlet: number) => boolean,
  *   _unlockReboot: (outlet: number) => void,
+ *   _setOutletRebooting: (outlet: number, rebooting: boolean) => void,
+ *   _isOutletRebooting: (outlet: number) => boolean,
+ *   _rebootingOutlets: Set<number>,
  *   _needsStatusRefresh?: boolean
  * }} SynaccessInstanceAugmented
  */

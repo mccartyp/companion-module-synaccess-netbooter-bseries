@@ -76,11 +76,21 @@ Once connected, outlet actions and feedbacks will reflect the current device sta
 
 ---
 
+## Presets
+
+- **Global power** buttons for all-on/all-off and status refresh
+- **Per-outlet control** buttons (On/Off/Toggle/Reboot) that colorize to the current state and flash red during reboots
+- **Per-outlet status** tiles for each detected outlet to monitor power state, with a slow red blink while rebooting
+
+---
+
 ## Feedbacks
 
 | Feedback | Description |
 |--------|------------|
 | Outlet is ON | True when the selected outlet is currently ON |
+| Outlet is OFF | True when the selected outlet is currently OFF |
+| Outlet is rebooting | True while the selected outlet is mid-reboot |
 | Connected | True when the last status poll succeeded |
 
 ---
