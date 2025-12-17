@@ -99,12 +99,12 @@ export function getPresets(instance) {
 			},
 			steps: [{ down: [], up: [] }],
 			feedbacks: [
-				// Brightness pulsing provided by advanced feedback
-				{ feedbackId: 'outlet_rebooting', options: { outlet } },
 				// ON -> green highlight
 				{ feedbackId: 'outlet_on', options: { outlet }, style: { bgcolor: COLOR_ON } },
 				// OFF -> red highlight
 				{ feedbackId: 'outlet_off', options: { outlet }, style: { bgcolor: COLOR_OFF } },
+				// Brightness pulsing provided by advanced feedback
+				{ feedbackId: 'outlet_rebooting', options: { outlet } },
 			],
 		}
 
@@ -121,12 +121,12 @@ export function getPresets(instance) {
 			},
 			steps: [{ down: [{ actionId: 'set_outlet', options: { outlet, state: 1 } }], up: [] }],
 			feedbacks: [
-				// Brightness pulsing provided by advanced feedback
-				{ feedbackId: 'outlet_rebooting', options: { outlet } },
 				// ON -> green highlight
 				{ feedbackId: 'outlet_on', options: { outlet }, style: { bgcolor: COLOR_ON } },
 				// OFF -> red highlight
 				{ feedbackId: 'outlet_off', options: { outlet }, style: { bgcolor: COLOR_OFF } },
+				// Brightness pulsing provided by advanced feedback
+				{ feedbackId: 'outlet_rebooting', options: { outlet } },
 			],
 		}
 
@@ -143,12 +143,12 @@ export function getPresets(instance) {
 			},
 			steps: [{ down: [{ actionId: 'set_outlet', options: { outlet, state: 0 } }], up: [] }],
 			feedbacks: [
-				// Brightness pulsing provided by advanced feedback
-				{ feedbackId: 'outlet_rebooting', options: { outlet } },
 				// OFF -> red highlight
 				{ feedbackId: 'outlet_off', options: { outlet }, style: { bgcolor: COLOR_OFF } },
 				// ON -> green highlight
 				{ feedbackId: 'outlet_on', options: { outlet }, style: { bgcolor: COLOR_ON } },
+				// Brightness pulsing provided by advanced feedback
+				{ feedbackId: 'outlet_rebooting', options: { outlet } },
 			],
 		}
 
@@ -165,12 +165,12 @@ export function getPresets(instance) {
 			},
 			steps: [{ down: [{ actionId: 'toggle_outlet', options: { outlet } }], up: [] }],
 			feedbacks: [
-				// Brightness pulsing provided by advanced feedback
-				{ feedbackId: 'outlet_rebooting', options: { outlet } },
 				// OFF -> red highlight
 				{ feedbackId: 'outlet_off', options: { outlet }, style: { bgcolor: COLOR_OFF } },
 				// ON -> green highlight
 				{ feedbackId: 'outlet_on', options: { outlet }, style: { bgcolor: COLOR_ON } },
+				// Brightness pulsing provided by advanced feedback
+				{ feedbackId: 'outlet_rebooting', options: { outlet } },
 			],
 		}
 
