@@ -114,7 +114,6 @@ export class SynaccessHttpClient {
 			}
 
 			try {
-				this.instance.log('debug', `HTTP GET ${path} (timeoutMs=${requestTimeoutMs})`)
 				const body = await new Promise((resolve, reject) => {
 					const req = http.request(opts, (res) => {
 						let data = ''

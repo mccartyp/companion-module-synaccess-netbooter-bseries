@@ -29,6 +29,10 @@ import { parseStatusResponse } from './utils.js'
 import { initVariables, updateVariablesFromState, setLastError } from './variables.js'
 import { initFeedbacks } from './feedbacks.js'
 
+import { createRequire } from 'module'
+const require = createRequire(import.meta.url)
+const { version: MODULE_VERSION } = require('./package.json')
+
 /**
  * Companion module instance for Synaccess netBooter B Series PDUs.
  * Handles lifecycle wiring, polling, and request serialization.
@@ -70,6 +74,12 @@ export class SynaccessNetBooterBSeriesInstance extends InstanceBase {
 	async init(config) {
 		this.config = config
 
+		// Log module identity and version early for diagnostics
+		this.log(
+			'info',
+			`Initializing Synaccess netBooter B Series module v${MODULE_VERSION}`
+		)
+
 		// Ensure HTTP agent starts fresh with current settings
 		this.http.resetAgent()
 
@@ -78,9 +88,9 @@ export class SynaccessNetBooterBSeriesInstance extends InstanceBase {
 		initFeedbacks(this)
 		initVariables(this)
 
-		this.updateStatus(InstanceStatus.Ok)
+		this.updateStatus(InstanceStatus.Ok, 'Initializing')
 		setLastError(this, '')
-		this.log('info', 'Instance initialized; starting status polling')
+		this.log('info', 'Initialization complete; starting periodic status polling')
 		this.startPolling()
 	}
 
@@ -254,8 +264,6 @@ export class SynaccessNetBooterBSeriesInstance extends InstanceBase {
 			if (!this._hasLoggedPollSuccess || oldPortCount !== this.portCount) {
 				this.log('info', `Status poll succeeded: ${summary}`)
 				this._hasLoggedPollSuccess = true
-			} else {
-				this.log('debug', `Status poll succeeded: ${summary}`)
 			}
 
 			setLastError(this, '')
