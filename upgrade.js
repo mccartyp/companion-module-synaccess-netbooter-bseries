@@ -13,6 +13,7 @@ export const upgradeScripts = [
 
 		if (cfg.pollIntervalMs === undefined) cfg.pollIntervalMs = 2000
 		if (cfg.statusTimeoutMs === undefined) cfg.statusTimeoutMs = 3000
+		if (cfg.controlPaceMs === undefined) cfg.controlPaceMs = 0
 		if (cfg.username === undefined) cfg.username = 'admin'
 		if (cfg.password === undefined) cfg.password = 'admin'
 

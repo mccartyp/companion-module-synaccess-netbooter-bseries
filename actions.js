@@ -1,5 +1,4 @@
 // actions.js
-import { setTimeout as sleep } from 'node:timers/promises'
 import { outletChoices, onOffChoices } from './choices.js'
 import { assertValidOutlet, assertActionOk } from './utils.js'
 

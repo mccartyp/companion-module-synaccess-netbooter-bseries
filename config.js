@@ -42,6 +42,16 @@ export const configFields = [
 	}),
 
 	numberInput({
+		id: 'controlPaceMs',
+		label: 'Pacing Between Control Commands (ms)',
+		width: 6,
+		defaultValue: 0,
+		min: 0,
+		max: 10000,
+		step: 50,
+	}),
+
+	numberInput({
 		id: 'statusTimeoutMs',
 		label: 'Status Timeout (ms) ($A5)',
 		width: 3,

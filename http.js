@@ -1,8 +1,12 @@
 // http.js
 import http from 'node:http'
 import { setTimeout as sleep } from 'node:timers/promises'
-import { normalizeCmd } from './utils.js'
+import { normalizeCmd, toBasicAuthHeader } from './utils.js'
 
+/**
+ * Lightweight HTTP client that serializes requests to the device.
+ * Uses a single keep-alive agent to avoid connection buildup on embedded stacks.
+ */
 export class SynaccessHttpClient {
 	constructor(instance) {
 		this.instance = instance
@@ -48,10 +52,19 @@ export class SynaccessHttpClient {
 		if (paceMs > 0) await sleep(paceMs)
 	}
 
+	/**
+	 * Send a serialized HTTP GET command to the device.
+	 * @param {string} cmd The raw command string (e.g. `$A3 1 1`).
+	 * @param {{ timeoutMs?: number }} [options]
+	 */
 	async get(cmd, { timeoutMs } = {}) {
 		if (!this._queue) this._queue = Promise.resolve()
 
 		const cmdStr = String(cmd || '').trim()
+
+		if (!this.instance?.config?.host) {
+			throw new Error('Device host is not configured')
+		}
 
 		const run = async () => {
 			this._pending++
@@ -63,10 +76,11 @@ export class SynaccessHttpClient {
 
 			const q = normalizeCmd(cmdStr) // spaces -> '+', no percent encoding
 			const path = `/cmd.cgi?${q}`
-			const token = Buffer.from(`${user}:${pass}`, 'utf8').toString('base64')
+			const authHeader = toBasicAuthHeader(user, pass)
 
 			const toMsRaw = timeoutMs ?? Number(cfg.controlTimeoutMs) ?? 20000
 			const toMs = Number.isFinite(toMsRaw) && toMsRaw >= 250 ? toMsRaw : 20000
+
 
 			const opts = {
 				host,
@@ -75,7 +89,7 @@ export class SynaccessHttpClient {
 				path,
 				agent: this._agent,
 				headers: {
-					Authorization: `Basic ${token}`,
+					Authorization: authHeader,
 					'User-Agent': 'Bitfocus-Companion/Synaccess-netBooter-BSeries',
 					Accept: '*/*',
 				},
