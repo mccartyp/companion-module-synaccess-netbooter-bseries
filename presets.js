@@ -12,7 +12,6 @@ const COLOR_ON = combineRgb(0, 140, 0)
 const COLOR_OFF = combineRgb(140, 0, 0)
 const COLOR_TEXT = combineRgb(255, 255, 255)
 const COLOR_BASE = combineRgb(40, 40, 40)
-const COLOR_TOGGLE = combineRgb(70, 70, 70)
 const COLOR_REBOOT = combineRgb(110, 60, 0)
 const COLOR_STATUS = combineRgb(30, 30, 30)
 const REBOOT_ANIMATION = { style: 'blink', speed: 'slow' }
@@ -188,7 +187,7 @@ export function getPresets(instance) {
 				text: `P${outlet}\nTOGGLE`,
 				size: '14',
 				color: COLOR_TEXT,
-				bgcolor: COLOR_TOGGLE,
+				bgcolor: COLOR_BASE,
 			},
 			steps: [{ down: [{ actionId: 'toggle_outlet', options: { outlet } }], up: [] }],
 			feedbacks: [
@@ -203,8 +202,10 @@ export function getPresets(instance) {
 						animation: REBOOT_ANIMATION,
 					},
 				},
-				// Show OFF as red (requested); ON remains default background
+				// OFF -> red highlight
 				{ feedbackId: 'outlet_off', options: { outlet }, style: { bgcolor: COLOR_OFF } },
+				// ON -> green highlight
+				{ feedbackId: 'outlet_on', options: { outlet }, style: { bgcolor: COLOR_ON } },
 			],
 		}
 
