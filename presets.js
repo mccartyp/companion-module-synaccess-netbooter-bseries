@@ -101,7 +101,9 @@ export function getPresets(instance) {
 			feedbacks: [
 				// Brightness pulsing provided by advanced feedback
 				{ feedbackId: 'outlet_rebooting', options: { outlet } },
+				// ON -> green highlight
 				{ feedbackId: 'outlet_on', options: { outlet }, style: { bgcolor: COLOR_ON } },
+				// OFF -> red highlight
 				{ feedbackId: 'outlet_off', options: { outlet }, style: { bgcolor: COLOR_OFF } },
 			],
 		}
