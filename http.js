@@ -74,13 +74,12 @@ export class SynaccessHttpClient {
 			const user = String(cfg.username || '')
 			const pass = String(cfg.password || '')
 
-			const q = normalizeCmd(cmdStr) // spaces -> '+', no percent encoding
-			const path = `/cmd.cgi?${q}`
+			const normalizedCmd = normalizeCmd(cmdStr) // spaces -> '+', no percent encoding
+			const path = `/cmd.cgi?${normalizedCmd}`
 			const authHeader = toBasicAuthHeader(user, pass)
 
-			const toMsRaw = timeoutMs ?? Number(cfg.controlTimeoutMs) ?? 20000
-			const toMs = Number.isFinite(toMsRaw) && toMsRaw >= 250 ? toMsRaw : 20000
-
+			const timeoutMsRaw = timeoutMs ?? Number(cfg.controlTimeoutMs) ?? 20000
+			const requestTimeoutMs = Number.isFinite(timeoutMsRaw) && timeoutMsRaw >= 250 ? timeoutMsRaw : 20000
 
 			const opts = {
 				host,
@@ -112,9 +111,9 @@ export class SynaccessHttpClient {
 						})
 					})
 
-					req.setTimeout(toMs, () => {
-						this.instance.log('debug', `HTTP Call Timed Out: cmd=${cmdStr} timeoutMs=${toMs} pending=${this._pending}`)
-						req.destroy(new Error(`Call timed out (cmd=${cmdStr}, timeoutMs=${toMs})`))
+					req.setTimeout(requestTimeoutMs, () => {
+						this.instance.log('debug', `HTTP Call Timed Out: cmd=${cmdStr} timeoutMs=${requestTimeoutMs} pending=${this._pending}`)
+						req.destroy(new Error(`Call timed out (cmd=${cmdStr}, timeoutMs=${requestTimeoutMs})`))
 					})
 
 					req.on('error', reject)
@@ -126,7 +125,7 @@ export class SynaccessHttpClient {
 		}
 
 		// Serialize requests. Ensure the next request runs even if the previous failed.
-		const p = this._queue.then(
+		const queuedRequest = this._queue.then(
 			async () => {
 				const body = await run()
 				await this._applyControlPace(cmdStr)
@@ -140,8 +139,8 @@ export class SynaccessHttpClient {
 		)
 
 		// Keep the queue alive even when callers ignore/propagate failures
-		this._queue = p.catch(() => undefined)
+		this._queue = queuedRequest.catch(() => undefined)
 
-		return p
+		return queuedRequest
 	}
 }

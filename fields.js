@@ -48,7 +48,7 @@ export function numberInput(opts) {
 		tooltip,
 	} = opts
 
-	const f = {
+	const field = {
 		type: 'number',
 		id,
 		label,
@@ -61,36 +61,11 @@ export function numberInput(opts) {
 		isVisibleExpression,
 	}
 
-	if (min !== undefined) f.min = min
-	if (max !== undefined) f.max = max
-	if (step !== undefined) f.step = step
+	if (min !== undefined) field.min = min
+	if (max !== undefined) field.max = max
+	if (step !== undefined) field.step = step
 
-	return f
-}
-export function checkbox(opts) {
-	const {
-		id,
-		label,
-		width = 3,
-		defaultValue = false,
-		required,
-		isRequired,
-		isVisibleExpression,
-		tooltip,
-	} = opts
-
-	return {
-		type: 'checkbox',
-		id,
-		label,
-		width,
-		// Companion expects `default`
-		default: Boolean(defaultValue),
-		// Companion expects `required`
-		required: Boolean(required ?? isRequired),
-		tooltip,
-		isVisibleExpression,
-	}
+	return field
 }
 
 export function staticText({

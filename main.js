@@ -168,14 +168,14 @@ class SynaccessNetBooterBSeriesInstance extends InstanceBase {
 			const timeoutMs = Number(this.config.statusTimeoutMs) || 3000
 			const body = await this._httpGet('$A5', { timeoutMs })
 
-			const st = parseStatusResponse(body)
+			const status = parseStatusResponse(body)
 
 			const oldPortCount = this.portCount
 
-			this.portCount = st.portCount
-			this.outletState = st.outlets
-			this.currentAmps = st.currentAmps
-			this.tempC = st.tempC
+			this.portCount = status.portCount
+			this.outletState = status.outlets
+			this.currentAmps = status.currentAmps
+			this.tempC = status.tempC
 
 			// Only rebuild definitions if the device type/autodetect changed
 			if (oldPortCount !== this.portCount) {
