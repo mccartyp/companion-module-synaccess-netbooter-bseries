@@ -12,6 +12,10 @@ import { parseStatusResponse } from './utils.js'
 import { initVariables, updateVariablesFromState, setLastError } from './variables.js'
 import { initFeedbacks } from './feedbacks.js'
 
+/**
+ * Companion module instance for Synaccess netBooter B Series PDUs.
+ * Handles lifecycle wiring, polling, and request serialization.
+ */
 class SynaccessNetBooterBSeriesInstance extends InstanceBase {
 	constructor(internal) {
 		super(internal)
